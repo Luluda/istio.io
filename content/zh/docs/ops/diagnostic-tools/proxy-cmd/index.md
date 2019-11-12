@@ -1,29 +1,28 @@
 ---
-title: Debugging Envoy and Pilot
-description: Describes tools and techniques to diagnose Envoy configuration issues related to traffic management.
+title: 调试 Envoy 和 Pilot
+description: 介绍一些工具和技术，用于诊断 Envoy 中与流量管理有关的配置问题。
 weight: 20
-keywords: [debug,proxy,status,config,pilot,envoy]
+keywords: [调试,代理,状态,配置,pilot,envoy]
 aliases:
-    - /help/ops/traffic-management/proxy-cmd
-    - /help/ops/misc
-    - /help/ops/troubleshooting/proxy-cmd
+    - /zh/help/ops/traffic-management/proxy-cmd
+    - /zh/help/ops/misc
+    - /zh/help/ops/troubleshooting/proxy-cmd
 ---
 
-Istio provides two very valuable commands to help diagnose traffic management configuration problems,
-the [`proxy-status`](/docs/reference/commands/istioctl/#istioctl-proxy-status)
-and [`proxy-config`](/docs/reference/commands/istioctl/#istioctl-proxy-config) commands. The `proxy-status` command
-allows you to get an overview of your mesh and identify the proxy causing the problem. Then `proxy-config` can be used
-to inspect Envoy configuration and diagnose the issue.
+Istio 提供了两个很有用的命令来帮助诊断流量管理配置问题，
+[`proxy-status`](/zh/docs/reference/commands/istioctl/#istioctl-proxy-status)
+和 [`proxy-config`](/zh/docs/reference/commands/istioctl/#istioctl-proxy-config)  命令。 `proxy-status` 命令
+可以获取网格的概览以及定位引发问题的代理。 `proxy-config` 可用于检查 Envoy 的配置，诊断问题。
 
-If you want to try the commands described below, you can either:
+如果你想使用如下所述命令，有两种方式：
 
-* Have a Kubernetes cluster with Istio and Bookinfo installed (e.g use `istio.yaml` as described in
-[installation steps](/docs/setup/install/kubernetes/) and
-[Bookinfo installation steps](/docs/examples/bookinfo/#deploying-the-application)).
+* 拥有一个安装了 Istio 和 Bookinfo 的 Kubernetes 集群（例如使用 `istio.yaml`，详细步骤见
+[kubernetes 安装步骤](/zh/docs/setup/install/kubernetes/) 与
+[Bookinfo 安装步骤](/zh/docs/examples/bookinfo/#deploying-the-application)）。
 
-OR
+或者
 
-* Use similar commands against your own application running in a Kubernetes cluster.
+* 对运行在Kubernetes集群中的应用程序使用类似的命令。
 
 ## Get an overview of your mesh
 
