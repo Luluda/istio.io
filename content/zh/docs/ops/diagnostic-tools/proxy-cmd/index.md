@@ -24,10 +24,9 @@ Istio 提供了两个很有用的命令来帮助诊断流量管理配置问题�
 
 * 对运行在Kubernetes集群中的应用程序使用类似的命令。
 
-## Get an overview of your mesh
+## 获取网格概览 {#get-an-overview-of-your-mesh}
 
-The `proxy-status` command allows you to get an overview of your mesh. If you suspect one of your sidecars isn't
-receiving configuration or is out of sync then `proxy-status` will tell you this.
+`proxy-status` 命令可以获取网格的概览。如果你怀疑你的一个 sidecar 没有收到配置或者没有同步，那么 `proxy-status` 会告诉你这个信息。
 
 {{< text bash >}}
 $ istioctl proxy-status
@@ -43,19 +42,16 @@ reviews-v2-686bbb668-99j76.default                     SYNCED     SYNCED     SYN
 reviews-v3-7b9b5fdfd6-4r52s.default                    SYNCED     SYNCED     SYNCED     SYNCED       istio-pilot-75bdf98789-n2kqh     1.1.2
 {{< /text >}}
 
-If a proxy is missing from this list it means that it is not currently connected to a Pilot instance so will not be
-receiving any configuration.
+如果此列表中缺少某个代理，则表示该代理当前未连接到 Pilot 实例，因此不会接收任何配置。
 
-* `SYNCED` means that Envoy has acknowledged the last configuration Pilot has sent to it.
-* `NOT SENT` means that Pilot hasn't sent anything to Envoy. This usually is because Pilot has nothing to send.
-* `STALE` means that Pilot has sent an update to Envoy but has not received an acknowledgement. This usually indicates
-a networking issue between Envoy and Pilot or a bug with Istio itself.
+* `SYNCED` 表示 Envoy 已确认 Pilot 发送给它的最新配置。
+* `NOT SENT` 表示 Pilot 没有发送任何东西给 Envoy。这通常是因为 Pilot 没有东西要发送。
+* `STALE` 表示 Pilot 已将一个更新发送给 Envoy 但尚未收到确认。这通常表明 Envoy 和 Pilot 之间有网络问题或 Istio 自身存在漏洞。
 
-## Retrieve diffs between Envoy and Istio Pilot
+## 检索 Envoy 和 Istio Pilot 之间的差异 {#retrieve-diffs-between-Envoy-and-Istio-Pilot}
 
-The `proxy-status` command can also be used to retrieve a diff between the configuration Envoy has loaded and the
-configuration Pilot would send, by providing a proxy ID. This can help you determine exactly what is out of sync and
-where the issue may lie.
+`proxy-status` 命令还可以通过提供代理 ID，用于检索 Envoy 已加载的与 Pilot 将发送的配置之间的差异。
+这可以帮助准确确定不同步的内容以及问题可能出在哪里。
 
 {{< text bash json >}}
 $ istioctl proxy-status details-v1-6dcc6fbb9d-wsjz4.default
@@ -103,9 +99,9 @@ Listeners Match
 Routes Match
 {{< /text >}}
 
-Here you can see that the listeners and routes match but the clusters are out of sync.
+上文可以看到，监听器和路由是匹配的，但集群没有同步。
 
-## Deep dive into Envoy configuration
+## 深入了解 Envoy 配置 {#deep-dive-into-Envoy-configuration}
 
 The `proxy-config` command can be used to see how a given Envoy instance is configured. This can then be used to
 pinpoint any issues you are unable to detect by just looking through your Istio configuration and custom resources.
