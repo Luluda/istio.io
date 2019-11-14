@@ -103,10 +103,8 @@ Routes Match
 
 ## 深入了解 Envoy 配置 {#deep-dive-into-Envoy-configuration}
 
-The `proxy-config` command can be used to see how a given Envoy instance is configured. This can then be used to
-pinpoint any issues you are unable to detect by just looking through your Istio configuration and custom resources.
-To get a basic summary of clusters, listeners or routes for a given pod use the command as follows (changing clusters
-for listeners or routes when required):
+`proxy-config` 命令可以用来查看给定的 Envoy 实例是如何配置的。由此可以查明任何仅通过查看 Istio 配置和自定义资源无法排查出的问题。
+要获得给定 pod 的集群、监听器或路由的基本摘要，请使用以下命令（必要时更改监听器或路由的集群）：
 
 {{< text bash >}}
 $ istioctl proxy-config cluster -n istio-system istio-ingressgateway-7d6874b48f-qxhn5
