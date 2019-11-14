@@ -288,7 +288,7 @@ one route that matches on everything. This route tells Envoy to send the request
     172.17.0.5:9080      HEALTHY     OK                outbound|9080||reviews.default.svc.cluster.local
     {{< /text >}}
 
-## Inspecting Bootstrap configuration
+## Inspecting Bootstrap configuration {#inspecting-Bootstrap-configuration}
 
 So far we have looked at configuration retrieved (mostly) from Pilot, however Envoy requires some bootstrap configuration that
 includes information like where Pilot can be found. To view this use the following command:
@@ -309,7 +309,7 @@ $ istioctl proxy-config bootstrap -n istio-system istio-ingressgateway-7d6874b48
 ...
 {{< /text >}}
 
-## Verifying connectivity to Istio Pilot
+## Verifying connectivity to Istio Pilot {#verifying-connectivity-to-Istio-Pilot}
 
 Verifying connectivity to Pilot is a useful troubleshooting step. Every proxy container in the service mesh should be able to communicate with Pilot. This can be accomplished in a few simple steps:
 
@@ -339,9 +339,9 @@ Verifying connectivity to Pilot is a useful troubleshooting step. Every proxy co
 
 You should receive a response listing the "service-key" and "hosts" for each service in the mesh.
 
-## What Envoy version is Istio using?
+## Istio 使用的 Envoy 是什么版本？ {#what-Envoy-version-is-Istio-using}
 
-To find out the Envoy version used in deployment, you can `exec` into the container and query the `server_info` endpoint:
+要找出部署中使用的 Envoy 版本，您可以在容器中执行 `exec` 并查询 `server_info` endpoint：
 
 {{< text bash >}}
 $ kubectl exec -it PODNAME -c istio-proxy -n NAMESPACE pilot-agent request GET server_info
