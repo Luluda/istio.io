@@ -121,7 +121,17 @@ istio-egressgateway.istio-system.svc.cluster.local                              
 In order to debug Envoy you need to understand Envoy clusters/listeners/routes/endpoints and how they all interact.
 We will use the `proxy-config` command with the `-o json` and filtering flags to follow Envoy as it determines where
 to send a request from the `productpage` pod to the `reviews` pod at `reviews:9080`.
+// todo
+为了调试 Envoy，您需要了解 Envoy 群集（clusters）/侦听器（listeners）/路由（routes）/endpoints 以及它们如何相互作用。
+我们将使用带 `-o json` 和过滤标志的 `proxy-config` 命令来跟踪 Envoy，因为它可以定位发送请求的位置，
+从 `productpage` pod 发送到 `reviews` pod 
 
+1. 如果在一个 pod 上查询监听器摘要，Istio 会生成以下侦听器：
+    * 一个 `0.0.0.0:15001` 上的侦听器，它接收所有进出该 pod 的流量，然后将请求移交给一个虚拟监听器。
+    * 每个服务 IP，每个非 HTTP 有一个虚拟监听器，用于出站的 TCP/HTTPS 流量。
+    * 每个暴露端口有一个在 Pod IP 上的虚拟监听器，用于入站流量。
+    * 每个 HTTP 端口有一个在`0.0.0.0`上的虚拟监听器，用于出站 HTTP 流量。
+    
 1. If you query the listener summary on a pod you will notice Istio generates the following listeners:
     * A listener on `0.0.0.0:15001` that receives all traffic into and out of the pod, then hands the request over to
     a virtual listener.
@@ -163,10 +173,10 @@ to send a request from the `productpage` pod to the `reviews` pod at `reviews:90
     172.30.164.190     9080      HTTP   // Receives all inbound traffic on 9080 from listener `0.0.0.0_15001`
     {{< /text >}}
 
-1. From the above summary you can see that every sidecar has a listener bound to `0.0.0.0:15001` which is where
-IP tables routes all inbound and outbound pod traffic to. This listener has `useOriginalDst` set to true which means
-it hands the request over to the listener that best matches the original destination of the request.
-If it can't find any matching virtual listeners it sends the request to the `PassthroughCluster` which connects to the destination directly.
+1. 从上面的摘要中可以看出，每个 sidecar 有一个绑定到 `0.0.0.0:15001` 的 listener，
+IP 表会将所有 inbound 和 outbound pod 的流量路由到 `0.0.0.0:15001`。
+Listener 的 `useOriginalDst` 为 true 表示它将请求移交给与请求的原始目的地最匹配的 listener。
+如果找不到任何匹配的 virtual listeners，它会将请求发送到直接连接到目标的  `PassthroughCluster`。
 
     {{< text bash json >}}
     $ istioctl proxy-config listeners productpage-v1-6c886ff494-7vxhs --port 15001 -o json
@@ -197,9 +207,8 @@ If it can't find any matching virtual listeners it sends the request to the `Pas
     ]
     {{< /text >}}
 
-1. Our request is an outbound HTTP request to port `9080` this means it gets handed off to the `0.0.0.0:9080` virtual
-listener. This listener then looks up the route configuration in its configured RDS. In this case it will be looking
-up route `9080` in RDS configured by Pilot (via ADS).
+1. 我们的请求是到端口 `9080` 的 outbound HTTP 请求，这表示请求移交给了 virtual listener `0.0.0.0：9080`。
+然后，此 listener 在其已配置的 RDS 中查找 route 配置。在此情况下它将在 Pilot（通过 ADS）配置的 RDS 中查找 route `9080`。
 
     {{< text bash json >}}
     $ istioctl proxy-config listeners productpage-v1-6c886ff494-7vxhs -o json --address 0.0.0.0 --port 9080
@@ -313,7 +322,7 @@ $ istioctl proxy-config bootstrap -n istio-system istio-ingressgateway-7d6874b48
 
 Verifying connectivity to Pilot is a useful troubleshooting step. Every proxy container in the service mesh should be able to communicate with Pilot. This can be accomplished in a few simple steps:
 
-1.  Get the name of the Istio Ingress pod:
+1.  获取 Istio Ingress pod名称：
 
     {{< text bash >}}
     $ INGRESS_POD_NAME=$(kubectl get po -n istio-system | grep ingressgateway\- | awk '{print$1}'); echo ${INGRESS_POD_NAME};
